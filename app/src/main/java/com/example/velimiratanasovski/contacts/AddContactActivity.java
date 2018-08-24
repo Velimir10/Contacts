@@ -3,6 +3,7 @@ package com.example.velimiratanasovski.contacts;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -12,7 +13,6 @@ public class AddContactActivity extends AppCompatActivity {
 
     public static final String NEW_CONTACT = "NEW CONTACT";
     private EditText mName, mLastname, mAddress, mPhoneNumber;
-    private Contact mNewContact;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,12 +26,13 @@ public class AddContactActivity extends AppCompatActivity {
 
     }
 
-    // Send data back to main activity
+
     public void onAddButtonClick(View view){
-        mNewContact = getContact();
+        Contact mNewContact = getContact();
         if(mNewContact != null){
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra(NEW_CONTACT, mNewContact);
+            // Send data back to main activity
             setResult(RESULT_OK, intent);
             finish();
         }
@@ -39,10 +40,10 @@ public class AddContactActivity extends AppCompatActivity {
 
     private Contact getContact() {
 
-        if (mName.getText().toString().equals("") || mLastname.getText().toString().equals("")
-                || mAddress.getText().toString().equals("")
-                || mPhoneNumber.getText().toString().equals("")) {
-            Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty(mName.getText()) || TextUtils.isEmpty(mLastname.getText())
+                || TextUtils.isEmpty(mAddress.getText())
+                || TextUtils.isEmpty(mPhoneNumber.getText())) {
+            Toast.makeText(this, R.string.toast_fill_all_fields, Toast.LENGTH_SHORT).show();
 
         } else {
             return new Contact(mName.getText().toString(),
@@ -52,6 +53,5 @@ public class AddContactActivity extends AppCompatActivity {
 
         }
         return null;
-
     }
 }

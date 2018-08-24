@@ -8,21 +8,21 @@ public class Contact implements Parcelable {
 
     private int id;
     private String name;
-    private String lastname;
+    private String lastName;
     private String address;
     private String phoneNumber;
 
-    public Contact(String name, String lastname, String address, String phoneNumber) {
+    public Contact(String name, String lastName, String address, String phoneNumber) {
         this.name = name;
         this.address = address;
-        this.lastname = lastname;
+        this.lastName = lastName;
         this.phoneNumber = phoneNumber;
     }
 
     protected Contact(Parcel in) {
         id = in.readInt();
         name = in.readString();
-        lastname = in.readString();
+        lastName = in.readString();
         address = in.readString();
         phoneNumber = in.readString();
     }
@@ -52,7 +52,7 @@ public class Contact implements Parcelable {
     }
 
     public String getLastname() {
-        return lastname;
+        return lastName;
     }
 
     public String getPhoneNumber() {
@@ -72,7 +72,7 @@ public class Contact implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
         dest.writeString(name);
-        dest.writeString(lastname);
+        dest.writeString(lastName);
         dest.writeString(address);
         dest.writeString(phoneNumber);
     }

@@ -7,14 +7,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import com.example.velimiratanasovski.contacts.R;
+
 import java.util.List;
+
 import com.example.velimiratanasovski.contacts.model.Contact;
 
 
-
-public class MyContactRecyclerAdapter extends RecyclerView.Adapter<MyContactRecyclerAdapter.ViewHolder>  {
-
+public class MyContactRecyclerAdapter extends RecyclerView.Adapter<MyContactRecyclerAdapter.ViewHolder> {
 
     private ItemClickListener mListener;
     private LayoutInflater mInflater;
@@ -22,10 +23,8 @@ public class MyContactRecyclerAdapter extends RecyclerView.Adapter<MyContactRecy
 
     public MyContactRecyclerAdapter(Context context, ItemClickListener listener) {
         mInflater = LayoutInflater.from(context);
-        mListener =  listener;
+        mListener = listener;
     }
-
-
 
     @NonNull
     @Override
@@ -38,41 +37,46 @@ public class MyContactRecyclerAdapter extends RecyclerView.Adapter<MyContactRecy
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
 
-        if(mContacts == null){
+        if (mContacts == null) {
             return;
         }
         Contact contact = mContacts.get(i);
 
-        if(contact != null) {
+        if (contact != null) {
             viewHolder.bind(contact, mListener);
         }
-
 
     }
 
     public void setContacts(List<Contact> mContacts) {
         this.mContacts = mContacts;
         notifyDataSetChanged();
+
     }
 
     @Override
     public int getItemCount() {
-        if(mContacts != null) {
+        if (mContacts != null)
             return mContacts.size();
-        } else return 0;
+        return 0;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public interface ItemClickListener {
+        void OnItemClick(Contact contact);
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView mNameAndLastName;
 
-        public ViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
             mNameAndLastName = itemView.findViewById(R.id.name_and_lastName);
         }
 
-        public void bind(final Contact contact, final ItemClickListener listener) {
-            this.mNameAndLastName.setText(contact.getName() + " " +contact.getLastname());
+        void bind(final Contact contact, final ItemClickListener listener) {
+            String text = contact.getName() + R.string.text_space + contact.getLastname();
+            this.mNameAndLastName.setText(text);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -82,9 +86,5 @@ public class MyContactRecyclerAdapter extends RecyclerView.Adapter<MyContactRecy
 
         }
 
-    }
-
-    public interface ItemClickListener {
-        public void OnItemClick(Contact contact);
     }
 }

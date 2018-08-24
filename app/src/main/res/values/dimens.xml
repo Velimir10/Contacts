@@ -2,4 +2,7 @@
 <resources>
     <dimen name="nameSize">22sp</dimen>
     <dimen name="listPadding">8dp</dimen>
+    <dimen name="TextViewMargins">8dp</dimen>
+    <dimen name="cardElevation">5dp</dimen>
+    <dimen name="cardContentPadding">6dp</dimen>
 </resources>
