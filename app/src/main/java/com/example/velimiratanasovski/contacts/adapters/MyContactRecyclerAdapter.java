@@ -7,11 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.example.velimiratanasovski.contacts.R;
-
 import java.util.List;
-
 import com.example.velimiratanasovski.contacts.model.Contact;
 
 
@@ -20,6 +17,7 @@ public class MyContactRecyclerAdapter extends RecyclerView.Adapter<MyContactRecy
     private ItemClickListener mListener;
     private LayoutInflater mInflater;
     private List<Contact> mContacts;
+
 
     public MyContactRecyclerAdapter(Context context, ItemClickListener listener) {
         mInflater = LayoutInflater.from(context);
@@ -75,7 +73,8 @@ public class MyContactRecyclerAdapter extends RecyclerView.Adapter<MyContactRecy
         }
 
         void bind(final Contact contact, final ItemClickListener listener) {
-            String text = contact.getName() + R.string.text_space + contact.getLastname();
+
+            String text = contact.getName() + " " + contact.getLastname();
             this.mNameAndLastName.setText(text);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -85,6 +84,5 @@ public class MyContactRecyclerAdapter extends RecyclerView.Adapter<MyContactRecy
             });
 
         }
-
     }
 }
