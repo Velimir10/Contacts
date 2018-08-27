@@ -7,6 +7,19 @@
     tools:context=".DetailContactActivity"
     android:orientation="vertical">
 
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme"
+            />
+    </android.support.design.widget.AppBarLayout>
+
     <TextView
         android:id="@+id/textView_name"
         android:layout_width="match_parent"
@@ -20,13 +33,19 @@
         style="@style/previewTextStyle"/>
 
     <TextView
+        android:id="@+id/textView_phone"
+        style="@style/previewTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
         android:id="@+id/textView_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/previewTextStyle"/>
 
     <TextView
-        android:id="@+id/textView_phone"
+        android:id="@+id/textView_eMail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/previewTextStyle"/>

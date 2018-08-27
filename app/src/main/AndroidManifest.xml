@@ -15,7 +15,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DetailContactActivity" />
-        <activity android:name=".AddContactActivity"/>
+        <activity android:name=".DetailContactActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".AddContactActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
     </application>
 </manifest>

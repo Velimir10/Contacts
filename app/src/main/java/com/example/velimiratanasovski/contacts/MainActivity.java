@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements MyContactRecycler
 
     public static final int ADD_ACTIVITY_REQUEST_CODE = 0;
     public static final int LOADER_ID = 1;
+    public static final int DETAIL_ACTIVITY_REQUEST_CODE = 2;
     private MyContactRecyclerAdapter mAdapter;
     private DbManager mDbManager;
     private DbHelper mHelper;
@@ -37,10 +38,10 @@ public class MainActivity extends AppCompatActivity implements MyContactRecycler
         mDbManager = DbManager.getInstance();
         mDbManager.setListener(this);
         getSupportLoaderManager().initLoader(LOADER_ID, null, this);
-        RecyclerView mRecyclerView = findViewById(R.id.recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new MyContactRecyclerAdapter(this, this);
-        mRecyclerView.setAdapter(mAdapter);
+        recyclerView.setAdapter(mAdapter);
 
     }
 
@@ -49,14 +50,24 @@ public class MainActivity extends AppCompatActivity implements MyContactRecycler
         startActivityForResult(intent, ADD_ACTIVITY_REQUEST_CODE);
     }
 
-    // This method is called when 2nd Activity finishes
+    // This method is called when AddContactActivity or DetailActivity finishes
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
+        Contact newContact;
         if (requestCode == ADD_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK && data != null && data.getExtras() != null) {
-                Contact newContact = data.getExtras().getParcelable(NEW_CONTACT);
+                 newContact = data.getExtras().getParcelable(NEW_CONTACT);
                 if (newContact != null) {
                     mDbManager.insertContact(this,newContact,mHelper);
+                }
+            }
+        } else if(requestCode == DETAIL_ACTIVITY_REQUEST_CODE){
+            if(resultCode == RESULT_OK && data != null && data.getExtras() != null){
+
+                newContact = data.getExtras().getParcelable(NEW_CONTACT);
+                if(newContact != null){
+                    mDbManager.updateContact(this,newContact,mHelper);
                 }
             }
         }
@@ -67,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements MyContactRecycler
         super.onDestroy();
         getSupportLoaderManager().destroyLoader(LOADER_ID);
         mHelper.close();
+        mDbManager.unsubscribeListener(this);
     }
 
 
@@ -74,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements MyContactRecycler
     public void OnItemClick(Contact contact) {
         Intent intent = new Intent(this, DetailContactActivity.class);
         intent.putExtra(CONTACT_POSITION, contact);
-        startActivity(intent);
+        startActivityForResult(intent,DETAIL_ACTIVITY_REQUEST_CODE);
     }
 
     @NonNull

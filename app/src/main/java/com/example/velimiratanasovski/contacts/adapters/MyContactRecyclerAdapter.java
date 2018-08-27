@@ -18,7 +18,6 @@ public class MyContactRecyclerAdapter extends RecyclerView.Adapter<MyContactRecy
     private LayoutInflater mInflater;
     private List<Contact> mContacts;
 
-
     public MyContactRecyclerAdapter(Context context, ItemClickListener listener) {
         mInflater = LayoutInflater.from(context);
         mListener = listener;
@@ -74,7 +73,7 @@ public class MyContactRecyclerAdapter extends RecyclerView.Adapter<MyContactRecy
 
         void bind(final Contact contact, final ItemClickListener listener) {
 
-            String text = contact.getName() + " " + contact.getLastname();
+            String text = contact.getName() + " " + contact.getLastName();
             this.mNameAndLastName.setText(text);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

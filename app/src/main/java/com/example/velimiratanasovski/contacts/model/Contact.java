@@ -2,8 +2,6 @@ package com.example.velimiratanasovski.contacts.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
-
 public class Contact implements Parcelable {
 
     private int id;
@@ -11,12 +9,14 @@ public class Contact implements Parcelable {
     private String lastName;
     private String address;
     private String phoneNumber;
+    private String eMail;
 
-    public Contact(String name, String lastName, String address, String phoneNumber) {
+    public Contact(String name, String lastName, String address, String phoneNumber, String eMail) {
         this.name = name;
         this.address = address;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
+        this.eMail = eMail;
     }
 
     protected Contact(Parcel in) {
@@ -25,6 +25,7 @@ public class Contact implements Parcelable {
         lastName = in.readString();
         address = in.readString();
         phoneNumber = in.readString();
+        eMail = in.readString();
     }
 
     public static final Creator<Contact> CREATOR = new Creator<Contact>() {
@@ -51,7 +52,7 @@ public class Contact implements Parcelable {
         return name;
     }
 
-    public String getLastname() {
+    public String getLastName() {
         return lastName;
     }
 
@@ -61,6 +62,30 @@ public class Contact implements Parcelable {
 
     public String getAddress() {
         return address;
+    }
+
+    public String getEmail() {
+        return eMail;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void seteMail(String eMail) {
+        this.eMail = eMail;
     }
 
     @Override
@@ -75,5 +100,6 @@ public class Contact implements Parcelable {
         dest.writeString(lastName);
         dest.writeString(address);
         dest.writeString(phoneNumber);
+        dest.writeString(eMail);
     }
 }

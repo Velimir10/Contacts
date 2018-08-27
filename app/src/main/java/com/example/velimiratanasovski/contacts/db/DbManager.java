@@ -1,9 +1,11 @@
 package com.example.velimiratanasovski.contacts.db;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import com.example.velimiratanasovski.contacts.db.DatabaseContract.ContactTable;
 import com.example.velimiratanasovski.contacts.model.Contact;
 import java.util.ArrayList;
@@ -11,17 +13,17 @@ import java.util.List;
 
 public final class DbManager {
 
-    private SQLiteDatabase mDb;
     private static DbManager instance;
-    private LoadListener mListener;
-
+    private SQLiteDatabase mDb;
+    private List<LoadListener> mListeners;
 
     private DbManager() {
+        mListeners = new ArrayList<>();
     }
 
-    public  static DbManager getInstance() {
-        if(instance == null){
-            synchronized (DbManager.class){
+    public static DbManager getInstance() {
+        if (instance == null) {
+            synchronized (DbManager.class) {
                 if (instance == null) {
                     instance = new DbManager();
                 }
@@ -30,8 +32,33 @@ public final class DbManager {
         return instance;
     }
 
-    public void setListener(LoadListener mListener){
-        this.mListener = mListener;
+    public void setListener(LoadListener listener) {
+        if (!mListeners.contains(listener)) {
+            mListeners.add(listener);
+        }
+    }
+
+    public void unsubscribeListener(LoadListener listener) {
+        mListeners.remove(listener);
+
+    }
+
+    public void onInsertListener() {
+        for (LoadListener listener : mListeners) {
+            listener.onInsert();
+        }
+    }
+
+    public void onUpdateListener() {
+        for (LoadListener listener : mListeners) {
+            listener.onUpdate();
+        }
+    }
+
+    public void onDeleteListener() {
+        for (LoadListener listener : mListeners) {
+            listener.onDelete();
+        }
     }
 
     synchronized private void setDb(DbHelper helper) {
@@ -44,15 +71,20 @@ public final class DbManager {
     public List<Contact> readAll(DbHelper helper) {
         setDb(helper);
         List<Contact> myContacts = new ArrayList<>();
-        Cursor cursor = mDb.rawQuery("SELECT * FROM " + ContactTable.TABLE_NAME, null);
+        String query = "SELECT * FROM " + ContactTable.TABLE_NAME + " ORDER BY name COLLATE NOCASE ASC";
+        Cursor cursor = mDb.rawQuery(query, null);
         try {
             while (cursor.moveToNext()) {
+                int id = cursor.getInt(cursor.getColumnIndex(ContactTable._ID));
                 String name = cursor.getString(cursor.getColumnIndex(ContactTable.COLUMN_NAME));
                 String lastname = cursor.getString(cursor.getColumnIndex(ContactTable.COLUMN_LASTNAME));
                 String address = cursor.getString(cursor.getColumnIndex(ContactTable.COLUMN_ADDRESS));
                 String phoneNumber = cursor.getString(cursor.getColumnIndex(ContactTable.COLUMN_PHONE_NUMBER));
+                String eMailAdress = cursor.getString(cursor.getColumnIndex(ContactTable.COLUMN_EMAIL_ADDRESS));
 
-                myContacts.add(new Contact(name, lastname, address, phoneNumber));
+                Contact contact = new Contact(name,lastname,address,phoneNumber,eMailAdress);
+                contact.setId(id);
+                myContacts.add(contact);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -61,22 +93,23 @@ public final class DbManager {
         return myContacts;
     }
 
-    public void insertContact(final Context context, final Contact contact,final DbHelper helper){
+    public void insertContact(final Context context, final Contact contact, final DbHelper helper) {
         setDb(helper);
-        new AsyncTask<Contact, Void, Void>(){
+        new AsyncTask<Contact, Void, Void>() {
             @Override
             protected Void doInBackground(Contact... contacts) {
 
                 Contact contact = contacts[0];
 
                 try {
-                    ContentValues mValues = new ContentValues();
-                    mValues.put(ContactTable.COLUMN_NAME, contact.getName());
-                    mValues.put(ContactTable.COLUMN_LASTNAME, contact.getLastname());
-                    mValues.put(ContactTable.COLUMN_ADDRESS, contact.getAddress());
-                    mValues.put(ContactTable.COLUMN_PHONE_NUMBER, contact.getPhoneNumber());
+                    ContentValues values = new ContentValues();
+                    values.put(ContactTable.COLUMN_NAME, contact.getName());
+                    values.put(ContactTable.COLUMN_LASTNAME, contact.getLastName());
+                    values.put(ContactTable.COLUMN_ADDRESS, contact.getAddress());
+                    values.put(ContactTable.COLUMN_PHONE_NUMBER, contact.getPhoneNumber());
+                    values.put(ContactTable.COLUMN_EMAIL_ADDRESS, contact.getEmail());
 
-                    long rowId = mDb.insert(ContactTable.TABLE_NAME, null, mValues);
+                    long rowId = mDb.insert(ContactTable.TABLE_NAME, null, values);
                     if (rowId != -1) {
                         contact.setId((int) rowId);
                     }
@@ -88,15 +121,90 @@ public final class DbManager {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                mListener.onInsert();
+                onInsertListener();
             }
         }.execute(contact);
 
     }
 
-    public interface LoadListener{
+    public  void insertInitialContacts(final SQLiteDatabase db,@NonNull final List<Contact> initialContacts) {
+
+        new AsyncTask<List<Contact>, Void, Void>() {
+            @Override
+            protected Void doInBackground(List<Contact>... lists) {
+
+                for (int i = 0; i < initialContacts.size(); i++) {
+
+                    try {
+                        ContentValues values = new ContentValues();
+                        values.put(ContactTable.COLUMN_NAME, initialContacts.get(i).getName());
+                        values.put(ContactTable.COLUMN_LASTNAME, initialContacts.get(i).getLastName());
+                        values.put(ContactTable.COLUMN_ADDRESS, initialContacts.get(i).getAddress());
+                        values.put(ContactTable.COLUMN_PHONE_NUMBER, initialContacts.get(i).getPhoneNumber());
+                        values.put(ContactTable.COLUMN_EMAIL_ADDRESS, initialContacts.get(i).getEmail());
+
+                        long rowId = db.insert(ContactTable.TABLE_NAME, null, values);
+                        if (rowId != -1) {
+                            initialContacts.get(i).setId((int) rowId);
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                onInsertListener();
+            }
+        }.execute(initialContacts);
+
+    }
+
+    public void updateContact(final Context context, final Contact contact, final DbHelper helper){
+        setDb(helper);
+
+        new AsyncTask<Contact, Void, Void>() {
+            @Override
+            protected Void doInBackground(Contact... contacts) {
+
+                Contact contact = contacts[0];
+
+                try {
+                    ContentValues values = new ContentValues();
+                    values.put(ContactTable.COLUMN_NAME, contact.getName());
+                    values.put(ContactTable.COLUMN_LASTNAME, contact.getLastName());
+                    values.put(ContactTable.COLUMN_ADDRESS, contact.getAddress());
+                    values.put(ContactTable.COLUMN_PHONE_NUMBER, contact.getPhoneNumber());
+                    values.put(ContactTable.COLUMN_EMAIL_ADDRESS, contact.getEmail());
+
+                    String where = ContactTable._ID + " = ?";
+                    String[] args = {""+contact.getId()};
+
+                    mDb.update(ContactTable.TABLE_NAME,values,where,args);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                onUpdateListener();
+            }
+        }.execute(contact);
+
+    }
+
+    public interface LoadListener {
         void onInsert();
+
         void onUpdate();
+
         void onDelete();
     }
 }
