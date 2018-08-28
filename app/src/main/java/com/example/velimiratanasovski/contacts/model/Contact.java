@@ -19,6 +19,15 @@ public class Contact implements Parcelable {
         this.eMail = eMail;
     }
 
+    public Contact(int id, String name, String lastName, String address, String phoneNumber, String eMail) {
+        this.id = id;
+        this.name = name;
+        this.lastName = lastName;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.eMail = eMail;
+    }
+
     protected Contact(Parcel in) {
         id = in.readInt();
         name = in.readString();

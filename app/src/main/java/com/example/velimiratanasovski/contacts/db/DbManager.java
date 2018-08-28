@@ -6,8 +6,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+
 import com.example.velimiratanasovski.contacts.db.DatabaseContract.ContactTable;
 import com.example.velimiratanasovski.contacts.model.Contact;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,7 +73,8 @@ public final class DbManager {
     public List<Contact> readAll(DbHelper helper) {
         setDb(helper);
         List<Contact> myContacts = new ArrayList<>();
-        String query = "SELECT * FROM " + ContactTable.TABLE_NAME + " ORDER BY name COLLATE NOCASE ASC";
+        String query = "SELECT * FROM " + ContactTable.TABLE_NAME + " ORDER BY " +
+                ContactTable.COLUMN_NAME +  "," + ContactTable.COLUMN_LASTNAME + " COLLATE NOCASE ASC";
         Cursor cursor = mDb.rawQuery(query, null);
         try {
             while (cursor.moveToNext()) {
@@ -82,8 +85,7 @@ public final class DbManager {
                 String phoneNumber = cursor.getString(cursor.getColumnIndex(ContactTable.COLUMN_PHONE_NUMBER));
                 String eMailAdress = cursor.getString(cursor.getColumnIndex(ContactTable.COLUMN_EMAIL_ADDRESS));
 
-                Contact contact = new Contact(name,lastname,address,phoneNumber,eMailAdress);
-                contact.setId(id);
+                Contact contact = new Contact(id, name, lastname, address, phoneNumber, eMailAdress);
                 myContacts.add(contact);
             }
         } catch (Exception e) {
@@ -102,14 +104,7 @@ public final class DbManager {
                 Contact contact = contacts[0];
 
                 try {
-                    ContentValues values = new ContentValues();
-                    values.put(ContactTable.COLUMN_NAME, contact.getName());
-                    values.put(ContactTable.COLUMN_LASTNAME, contact.getLastName());
-                    values.put(ContactTable.COLUMN_ADDRESS, contact.getAddress());
-                    values.put(ContactTable.COLUMN_PHONE_NUMBER, contact.getPhoneNumber());
-                    values.put(ContactTable.COLUMN_EMAIL_ADDRESS, contact.getEmail());
-
-                    long rowId = mDb.insert(ContactTable.TABLE_NAME, null, values);
+                    long rowId = mDb.insert(ContactTable.TABLE_NAME, null, generateContentValuesFromContact(contact));
                     if (rowId != -1) {
                         contact.setId((int) rowId);
                     }
@@ -127,7 +122,7 @@ public final class DbManager {
 
     }
 
-    public  void insertInitialContacts(final SQLiteDatabase db,@NonNull final List<Contact> initialContacts) {
+    public void insertInitialContacts(final SQLiteDatabase db, @NonNull final List<Contact> initialContacts) {
 
         new AsyncTask<List<Contact>, Void, Void>() {
             @Override
@@ -136,14 +131,7 @@ public final class DbManager {
                 for (int i = 0; i < initialContacts.size(); i++) {
 
                     try {
-                        ContentValues values = new ContentValues();
-                        values.put(ContactTable.COLUMN_NAME, initialContacts.get(i).getName());
-                        values.put(ContactTable.COLUMN_LASTNAME, initialContacts.get(i).getLastName());
-                        values.put(ContactTable.COLUMN_ADDRESS, initialContacts.get(i).getAddress());
-                        values.put(ContactTable.COLUMN_PHONE_NUMBER, initialContacts.get(i).getPhoneNumber());
-                        values.put(ContactTable.COLUMN_EMAIL_ADDRESS, initialContacts.get(i).getEmail());
-
-                        long rowId = db.insert(ContactTable.TABLE_NAME, null, values);
+                        long rowId = db.insert(ContactTable.TABLE_NAME, null, generateContentValuesFromContact(initialContacts.get(i)));
                         if (rowId != -1) {
                             initialContacts.get(i).setId((int) rowId);
                         }
@@ -164,7 +152,7 @@ public final class DbManager {
 
     }
 
-    public void updateContact(final Context context, final Contact contact, final DbHelper helper){
+    public void updateContact(final Context context, final Contact contact, final DbHelper helper) {
         setDb(helper);
 
         new AsyncTask<Contact, Void, Void>() {
@@ -174,17 +162,12 @@ public final class DbManager {
                 Contact contact = contacts[0];
 
                 try {
-                    ContentValues values = new ContentValues();
-                    values.put(ContactTable.COLUMN_NAME, contact.getName());
-                    values.put(ContactTable.COLUMN_LASTNAME, contact.getLastName());
-                    values.put(ContactTable.COLUMN_ADDRESS, contact.getAddress());
-                    values.put(ContactTable.COLUMN_PHONE_NUMBER, contact.getPhoneNumber());
-                    values.put(ContactTable.COLUMN_EMAIL_ADDRESS, contact.getEmail());
+                    generateContentValuesFromContact(contact);
 
                     String where = ContactTable._ID + " = ?";
-                    String[] args = {""+contact.getId()};
+                    String[] args = {"" + contact.getId()};
 
-                    mDb.update(ContactTable.TABLE_NAME,values,where,args);
+                    mDb.update(ContactTable.TABLE_NAME, generateContentValuesFromContact(contact), where, args);
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -198,6 +181,16 @@ public final class DbManager {
             }
         }.execute(contact);
 
+    }
+
+    private ContentValues generateContentValuesFromContact(Contact contact) {
+        ContentValues values = new ContentValues();
+        values.put(ContactTable.COLUMN_NAME, contact.getName());
+        values.put(ContactTable.COLUMN_LASTNAME, contact.getLastName());
+        values.put(ContactTable.COLUMN_ADDRESS, contact.getAddress());
+        values.put(ContactTable.COLUMN_PHONE_NUMBER, contact.getPhoneNumber());
+        values.put(ContactTable.COLUMN_EMAIL_ADDRESS, contact.getEmail());
+        return values;
     }
 
     public interface LoadListener {

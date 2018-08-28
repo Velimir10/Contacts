@@ -7,9 +7,10 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
+
 import com.example.velimiratanasovski.contacts.model.Contact;
+
 import static com.example.velimiratanasovski.contacts.DetailContactActivity.EDIT_CONTACT;
 
 public class AddContactActivity extends AppCompatActivity {
@@ -33,10 +34,7 @@ public class AddContactActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
-
-
         try {
             mEditContact = getIntent().getExtras().getParcelable(EDIT_CONTACT);
             if (mEditContact != null) {
@@ -63,25 +61,20 @@ public class AddContactActivity extends AppCompatActivity {
             mEditContact.setPhoneNumber(mPhoneNumber.getText().toString());
             mEditContact.seteMail(mEmailAddress.getText().toString());
 
-            intent.putExtra(NEW_CONTACT, mEditContact);
-            setResult(RESULT_OK, intent);
-            finish();
         } else {
-
             mEditContact = getContact();
-            intent.putExtra(NEW_CONTACT, mEditContact);
-            setResult(RESULT_OK, intent);
-            finish();
         }
+        intent.putExtra(NEW_CONTACT, mEditContact);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     private Contact getContact() {
-            return new Contact(mName.getText().toString(),
-                    mLastname.getText().toString(),
-                    mAddress.getText().toString(),
-                    mPhoneNumber.getText().toString(),
-                    mEmailAddress.getText().toString());
-
+        return new Contact(mName.getText().toString(),
+                mLastname.getText().toString(),
+                mAddress.getText().toString(),
+                mPhoneNumber.getText().toString(),
+                mEmailAddress.getText().toString());
     }
 
     @Override
@@ -91,12 +84,10 @@ public class AddContactActivity extends AppCompatActivity {
     }
 
     public void setContactValues() {
-
-        mName.setText(mEditContact.getName(), TextView.BufferType.EDITABLE);
-        mLastname.setText(mEditContact.getLastName(), TextView.BufferType.EDITABLE);
-        mPhoneNumber.setText(mEditContact.getPhoneNumber(), TextView.BufferType.EDITABLE);
-        mAddress.setText(mEditContact.getAddress(), TextView.BufferType.EDITABLE);
-        mEmailAddress.setText(mEditContact.getEmail(), TextView.BufferType.EDITABLE);
-
+        mName.setText(mEditContact.getName());
+        mLastname.setText(mEditContact.getLastName());
+        mPhoneNumber.setText(mEditContact.getPhoneNumber());
+        mAddress.setText(mEditContact.getAddress());
+        mEmailAddress.setText(mEditContact.getEmail());
     }
 }
