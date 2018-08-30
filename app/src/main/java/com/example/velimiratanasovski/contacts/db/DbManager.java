@@ -1,15 +1,12 @@
 package com.example.velimiratanasovski.contacts.db;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-
 import com.example.velimiratanasovski.contacts.db.DatabaseContract.ContactTable;
 import com.example.velimiratanasovski.contacts.model.Contact;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,19 +42,19 @@ public final class DbManager {
 
     }
 
-    public void onInsertListener() {
+    private void onInsertListener() {
         for (LoadListener listener : mListeners) {
             listener.onInsert();
         }
     }
 
-    public void onUpdateListener() {
+    private void onUpdateListener() {
         for (LoadListener listener : mListeners) {
             listener.onUpdate();
         }
     }
 
-    public void onDeleteListener() {
+    private void onDeleteListener() {
         for (LoadListener listener : mListeners) {
             listener.onDelete();
         }
@@ -69,12 +66,11 @@ public final class DbManager {
         }
     }
 
-
     public List<Contact> readAll(DbHelper helper) {
         setDb(helper);
         List<Contact> myContacts = new ArrayList<>();
         String query = "SELECT * FROM " + ContactTable.TABLE_NAME + " ORDER BY " +
-                ContactTable.COLUMN_NAME +  "," + ContactTable.COLUMN_LASTNAME + " COLLATE NOCASE ASC";
+                ContactTable.COLUMN_NAME + "," + ContactTable.COLUMN_LASTNAME + " COLLATE NOCASE ASC";
         Cursor cursor = mDb.rawQuery(query, null);
         try {
             while (cursor.moveToNext()) {
@@ -95,7 +91,7 @@ public final class DbManager {
         return myContacts;
     }
 
-    public void insertContact(final Context context, final Contact contact, final DbHelper helper) {
+    public void insertContact(final Contact contact, final DbHelper helper) {
         setDb(helper);
         new AsyncTask<Contact, Void, Void>() {
             @Override
@@ -119,7 +115,6 @@ public final class DbManager {
                 onInsertListener();
             }
         }.execute(contact);
-
     }
 
     public void insertInitialContacts(final SQLiteDatabase db, @NonNull final List<Contact> initialContacts) {
@@ -139,22 +134,49 @@ public final class DbManager {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                }
+                return null;
+            }
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                onInsertListener();
+            }
+        }.execute(initialContacts);
+    }
 
+    public void deleteSelectedContacts(@NonNull List<Contact> contacts, final DbHelper helper) {
+        setDb(helper);
+        new AsyncTask<List<Contact>, Void, Void>() {
+            @Override
+            protected Void doInBackground(List<Contact>... lists) {
+                String queryArray = "(";
+                for (int i =0 ; i < lists[0].size(); i++) {
+
+
+                    if (i == lists[0].size() - 1) {
+                        queryArray += lists[0].get(i).getId() + ")";
+                    } else {
+                        queryArray += lists[0].get(i).getId() + ", ";
+                    }
+                }
+                String where = ContactTable._ID + " in " + queryArray;
+                try {
+                    mDb.delete(ContactTable.TABLE_NAME, where, null);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
                 return null;
             }
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                onInsertListener();
+                onDeleteListener();
             }
-        }.execute(initialContacts);
-
+        }.execute(contacts);
     }
 
-    public void updateContact(final Context context, final Contact contact, final DbHelper helper) {
+    public void updateContact(final Contact contact, final DbHelper helper) {
         setDb(helper);
-
         new AsyncTask<Contact, Void, Void>() {
             @Override
             protected Void doInBackground(Contact... contacts) {
@@ -174,7 +196,6 @@ public final class DbManager {
                 }
                 return null;
             }
-
             @Override
             protected void onPostExecute(Void aVoid) {
                 onUpdateListener();
@@ -195,9 +216,7 @@ public final class DbManager {
 
     public interface LoadListener {
         void onInsert();
-
         void onUpdate();
-
         void onDelete();
     }
 }

@@ -8,4 +8,5 @@
     <string name="toast_add_contact">Please, enter name and phone number!</string>
     <string name="edit">Edit</string>
     <string name="enter_email_address">Enter Email address…</string>
+    <string name="delete">delete</string>
 </resources>

@@ -28,7 +28,7 @@ public class Contact implements Parcelable {
         this.eMail = eMail;
     }
 
-    protected Contact(Parcel in) {
+    private Contact(Parcel in) {
         id = in.readInt();
         name = in.readString();
         lastName = in.readString();

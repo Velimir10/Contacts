@@ -6,9 +6,9 @@ import java.util.List;
 
 public abstract class AbstractDataLoader<E> extends AsyncTaskLoader<List<E>> {
 
-    protected List<E> mLastDataList = null;
+    private List<E> mLastDataList = null;
 
-    public AbstractDataLoader(Context context) {
+    AbstractDataLoader(Context context) {
         super(context);
     }
 
@@ -101,7 +101,7 @@ public abstract class AbstractDataLoader<E> extends AsyncTaskLoader<List<E>> {
         mLastDataList = null;
     }
 
-    protected void emptyDataList(List<E> dataList) {
+    private void emptyDataList(List<E> dataList) {
         if (dataList != null && dataList.size() > 0) {
             dataList.clear();
         }

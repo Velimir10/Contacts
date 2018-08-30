@@ -8,9 +8,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.example.velimiratanasovski.contacts.model.Contact;
-
 import static com.example.velimiratanasovski.contacts.DetailContactActivity.EDIT_CONTACT;
 
 public class AddContactActivity extends AppCompatActivity {

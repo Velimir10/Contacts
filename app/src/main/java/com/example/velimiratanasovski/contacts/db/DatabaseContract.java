@@ -2,10 +2,10 @@ package com.example.velimiratanasovski.contacts.db;
 
 import android.provider.BaseColumns;
 
-public final class DatabaseContract {
+final class DatabaseContract {
 
-     public static final String DATABASE_NAME = "Contacts.db";
-     public static int DATABASE_VERSION = 7;
+     static final String DATABASE_NAME = "Contacts.db";
+     static int DATABASE_VERSION = 8;
 
     private DatabaseContract(){}
 
@@ -20,7 +20,7 @@ public final class DatabaseContract {
         public static final String COLUMN_EMAIL_ADDRESS = "e_mail";
 
         public static final String SQL_CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (" +
-                _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                _ID + " INTEGER PRIMARY KEY, " +
                 COLUMN_NAME + " TEXT NOT NULL, " +
                 COLUMN_LASTNAME + " TEXT, " +
                 COLUMN_ADDRESS + " TEXT, " +
@@ -28,8 +28,6 @@ public final class DatabaseContract {
                 COLUMN_EMAIL_ADDRESS + " TEXT)";
 
         public static final String SQL_DELETE_TABLE = "DROP TABLE if EXISTS " + TABLE_NAME;
-
-
 
     }
 }

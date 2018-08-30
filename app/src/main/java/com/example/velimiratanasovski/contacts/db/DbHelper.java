@@ -33,10 +33,9 @@ public final class DbHelper extends SQLiteOpenHelper {
         onUpgrade(db, oldVersion, newVersion);
     }
 
-    public void addInitialContacts(){
+    private void addInitialContacts(){
         initialContacts.add(new Contact("Stefan", "Stefanovic", "Miroslava Ilica 15", "0652288456", "sstefan@hotmail.com"));
         initialContacts.add(new Contact("Marko", "Markovic", "Djordja Jovanovic 7a", "0652282281", "markommm@hotmail.com"));
         initialContacts.add(new Contact("Dusan", "Petrovic", "Hajduk Veljkova 118", "0634445451", "dule11@hotmail.com"));
     }
-
 }

@@ -81,6 +81,5 @@ public class DetailContactActivity extends AppCompatActivity {
                 default:
                     return super.onOptionsItemSelected(item);
         }
-
     }
 }
