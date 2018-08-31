@@ -12,12 +12,14 @@ import java.util.List;
 
 public final class DbManager {
 
+    private final String orderBy;
     private static DbManager instance;
     private SQLiteDatabase mDb;
     private List<LoadListener> mListeners;
 
     private DbManager() {
         mListeners = new ArrayList<>();
+        this.orderBy = ContactTable.COLUMN_NAME + ", " + ContactTable.COLUMN_LAST_NAME + " COLLATE NOCASE ASC";
     }
 
     public static DbManager getInstance() {
@@ -66,17 +68,17 @@ public final class DbManager {
         }
     }
 
-    public List<Contact> readAll(DbHelper helper) {
+    public List<Contact> read(DbHelper helper, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String limit) {
         setDb(helper);
+
         List<Contact> myContacts = new ArrayList<>();
-        String query = "SELECT * FROM " + ContactTable.TABLE_NAME + " ORDER BY " +
-                ContactTable.COLUMN_NAME + "," + ContactTable.COLUMN_LASTNAME + " COLLATE NOCASE ASC";
-        Cursor cursor = mDb.rawQuery(query, null);
+        Cursor cursor = mDb.query(ContactTable.TABLE_NAME, columns,selection,selectionArgs,groupBy,having,orderBy,limit);
+
         try {
             while (cursor.moveToNext()) {
                 int id = cursor.getInt(cursor.getColumnIndex(ContactTable._ID));
                 String name = cursor.getString(cursor.getColumnIndex(ContactTable.COLUMN_NAME));
-                String lastname = cursor.getString(cursor.getColumnIndex(ContactTable.COLUMN_LASTNAME));
+                String lastname = cursor.getString(cursor.getColumnIndex(ContactTable.COLUMN_LAST_NAME));
                 String address = cursor.getString(cursor.getColumnIndex(ContactTable.COLUMN_ADDRESS));
                 String phoneNumber = cursor.getString(cursor.getColumnIndex(ContactTable.COLUMN_PHONE_NUMBER));
                 String eMailAdress = cursor.getString(cursor.getColumnIndex(ContactTable.COLUMN_EMAIL_ADDRESS));
@@ -144,7 +146,7 @@ public final class DbManager {
         }.execute(initialContacts);
     }
 
-    public void deleteSelectedContacts(@NonNull List<Contact> contacts, final DbHelper helper) {
+    public void deleteContacts(@NonNull List<Contact> contacts, final DbHelper helper) {
         setDb(helper);
         new AsyncTask<List<Contact>, Void, Void>() {
             @Override
@@ -201,13 +203,12 @@ public final class DbManager {
                 onUpdateListener();
             }
         }.execute(contact);
-
     }
 
     private ContentValues generateContentValuesFromContact(Contact contact) {
         ContentValues values = new ContentValues();
         values.put(ContactTable.COLUMN_NAME, contact.getName());
-        values.put(ContactTable.COLUMN_LASTNAME, contact.getLastName());
+        values.put(ContactTable.COLUMN_LAST_NAME, contact.getLastName());
         values.put(ContactTable.COLUMN_ADDRESS, contact.getAddress());
         values.put(ContactTable.COLUMN_PHONE_NUMBER, contact.getPhoneNumber());
         values.put(ContactTable.COLUMN_EMAIL_ADDRESS, contact.getEmail());

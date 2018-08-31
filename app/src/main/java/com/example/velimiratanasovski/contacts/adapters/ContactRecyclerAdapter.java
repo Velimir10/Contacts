@@ -13,18 +13,18 @@ import java.util.ArrayList;
 import java.util.List;
 import com.example.velimiratanasovski.contacts.model.Contact;
 
-public class MyContactRecyclerAdapter extends RecyclerView.Adapter<MyContactRecyclerAdapter.ViewHolder> {
+public class ContactRecyclerAdapter extends RecyclerView.Adapter<ContactRecyclerAdapter.ViewHolder> {
 
     private ItemClickListener mListener;
     private LayoutInflater mInflater;
     private List<Contact> mContacts;
-    private List<Integer> mSelectedItems = new ArrayList<>();
+    private ArrayList<Integer> mSelectedItems = new ArrayList<>();
 
     public List<Contact> getContacts() {
         return mContacts;
     }
 
-    public MyContactRecyclerAdapter(Context context, ItemClickListener listener) {
+    public ContactRecyclerAdapter(Context context, ItemClickListener listener) {
         mInflater = LayoutInflater.from(context);
         mListener = listener;
     }
@@ -32,7 +32,7 @@ public class MyContactRecyclerAdapter extends RecyclerView.Adapter<MyContactRecy
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = mInflater.inflate(R.layout.recycle_contact_list, viewGroup, false);
+        View view = mInflater.inflate(R.layout.recycle_contact_list_item, viewGroup, false);
         return new ViewHolder(view);
     }
 
@@ -78,7 +78,7 @@ public class MyContactRecyclerAdapter extends RecyclerView.Adapter<MyContactRecy
         return mContacts.indexOf(contact);
     }
 
-    public List<Integer> getSelectedItems() {
+    public ArrayList<Integer> getSelectedItems() {
         return mSelectedItems;
     }
 
