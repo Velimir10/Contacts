@@ -5,20 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-<android.support.v7.widget.CardView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:cardElevation="@dimen/cardElevation"
-    app:cardUseCompatPadding="true"
-    app:contentPadding="@dimen/cardContentPadding">
-
-        <TextView
-            android:id="@+id/name_and_lastName"
-            android:layout_width="wrap_content"
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="@dimen/TextViewMargins"
-            android:textSize="@dimen/nameSize"/>
+            app:contentPadding="@dimen/cardContentPadding">
 
-</android.support.v7.widget.CardView>
+                <TextView
+                    android:id="@+id/name_and_lastName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="@dimen/TextViewMargins"
+                    android:textSize="@dimen/nameSize"
+                    tools:text="Velimir Atanasovski"/>
+
+        </android.support.v7.widget.CardView>
 </FrameLayout>

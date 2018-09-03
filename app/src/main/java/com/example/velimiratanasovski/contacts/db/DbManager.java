@@ -72,7 +72,7 @@ public final class DbManager {
         setDb(helper);
 
         List<Contact> myContacts = new ArrayList<>();
-        Cursor cursor = mDb.query(ContactTable.TABLE_NAME, columns,selection,selectionArgs,groupBy,having,orderBy,limit);
+        Cursor cursor = mDb.query(ContactTable.TABLE_NAME, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
 
         try {
             while (cursor.moveToNext()) {

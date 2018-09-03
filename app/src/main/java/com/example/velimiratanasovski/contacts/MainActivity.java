@@ -32,11 +32,11 @@ public class MainActivity extends AppCompatActivity implements ContactRecyclerAd
 
     public static final String ACTION_MODE_STATUS_KEY = "ACTION_MODE_STATUS_KEY";
     public static final String SELECTED_ITEMS_KEY = "SELECTED_ITEMS_KEY";
+    public static final String SEARCH_TEXT_KEY = "SEARCH_TEXT_KEY";
+    public static final String SEARCH_ITEM_EXPAND_STATUS = "EXPANDED";
     public static final int ADD_ACTIVITY_REQUEST_CODE = 0;
     public static final int LOADER_ID = 1;
     public static final int DETAIL_ACTIVITY_REQUEST_CODE = 2;
-    public static final String SEARCH_RESULT_KEY = "SEARCH_RESULT_KEY";
-    public static final String SEARCH_ITEM_EXPAND_STATUS = "EXPANDED";
     private ContactRecyclerAdapter mAdapter;
     private ActionMode mActionMode;
     private DbManager mDbManager;
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements ContactRecyclerAd
     private String mSearchText;
     private SearchView mSearchView;
     private MenuItem mSearchItem;
-    private boolean isSearchItemExpanded;
+    private boolean mIsSearchItemExpanded;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements ContactRecyclerAd
         super.onSaveInstanceState(outState);
         outState.putBoolean(ACTION_MODE_STATUS_KEY, mActionMode != null);
         outState.putIntegerArrayList(SELECTED_ITEMS_KEY, mAdapter.getSelectedItems());
-        outState.putString(SEARCH_RESULT_KEY, mSearchText);
+        outState.putString(SEARCH_TEXT_KEY, mSearchText);
         outState.putBoolean(SEARCH_ITEM_EXPAND_STATUS, mSearchItem.isActionViewExpanded());
     }
 
@@ -78,8 +78,8 @@ public class MainActivity extends AppCompatActivity implements ContactRecyclerAd
             mActionMode = startSupportActionMode(actionModeCallbacks);
             mAdapter.setSelectedItems(selectedItems);
         }
-        mSearchText = savedInstanceState.getString(SEARCH_RESULT_KEY);
-        isSearchItemExpanded = savedInstanceState.getBoolean(SEARCH_ITEM_EXPAND_STATUS);
+        mSearchText = savedInstanceState.getString(SEARCH_TEXT_KEY);
+        mIsSearchItemExpanded = savedInstanceState.getBoolean(SEARCH_ITEM_EXPAND_STATUS);
     }
 
     public void onFabClick(View view) {
@@ -147,20 +147,15 @@ public class MainActivity extends AppCompatActivity implements ContactRecyclerAd
     @Override
     public Loader<List<Contact>> onCreateLoader(int i, @Nullable Bundle bundle) {
 
-        String[] columns = {};
-        String limit = "";
-        String selection= "";
-        String[] selectionArgs = {};
-        String groupBy = "";
-        String having = "";
-        if(mSearchText != null){
-          selection = ContactTable.COLUMN_NAME + " LIKE ? OR " + ContactTable.COLUMN_LAST_NAME + " LIKE ?";
-          String[] selectedArg = {mSearchText + "%" , mSearchText + "%"};
-          return new DatabaseLoader(this,mDbManager,columns,selection,
-                    selectedArg,groupBy,having,limit);
+        if (mSearchText != null) {
+            String selection = ContactTable.COLUMN_NAME + " LIKE ? OR " + ContactTable.COLUMN_LAST_NAME + " LIKE ?";
+            String[] selectedArg = {mSearchText + "%", mSearchText + "%"};
+
+            return new DatabaseLoader(this, mDbManager, null, selection, selectedArg,
+                    null, null, null);
         }
-          return new DatabaseLoader(this,mDbManager,columns,selection,
-                selectionArgs,groupBy,having,limit);
+        return new DatabaseLoader(this, mDbManager, null, null, null, null,
+                null, null);
     }
 
     @Override
@@ -236,7 +231,8 @@ public class MainActivity extends AppCompatActivity implements ContactRecyclerAd
         getMenuInflater().inflate(R.menu.options_menu, menu);
         mSearchItem = menu.findItem(R.id.search);
         mSearchView = (SearchView) mSearchItem.getActionView();
-        if(!TextUtils.isEmpty(mSearchText) || isSearchItemExpanded)
+        mSearchView.setQueryHint(getString(R.string.search_hint));
+        if(!TextUtils.isEmpty(mSearchText) || mIsSearchItemExpanded)
         {
              new Handler().post(new Runnable() {
                  @Override
@@ -245,12 +241,10 @@ public class MainActivity extends AppCompatActivity implements ContactRecyclerAd
                      mSearchItem.expandActionView();
                      mSearchView.setQuery(mSearchText,true);
                      mSearchView.setOnQueryTextListener(MainActivity.this);
-                     mSearchView.setQueryHint(getString(R.string.search_hint));
                  }
              });
         } else {
             mSearchView.setOnQueryTextListener(this);
-            mSearchView.setQueryHint(getString(R.string.search_hint));
         }
         getSupportLoaderManager().restartLoader(LOADER_ID,null,this);
         return true;
