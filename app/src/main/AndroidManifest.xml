@@ -19,6 +19,5 @@
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".AddContactActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
-
     </application>
 </manifest>

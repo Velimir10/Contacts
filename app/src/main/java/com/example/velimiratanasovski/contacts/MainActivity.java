@@ -1,6 +1,9 @@
 package com.example.velimiratanasovski.contacts;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,6 +19,7 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 import com.example.velimiratanasovski.contacts.adapters.ContactRecyclerAdapter;
 import com.example.velimiratanasovski.contacts.db.DatabaseContract.ContactTable;
 import com.example.velimiratanasovski.contacts.db.DatabaseLoader;
@@ -33,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements ContactRecyclerAd
     public static final String ACTION_MODE_STATUS_KEY = "ACTION_MODE_STATUS_KEY";
     public static final String SELECTED_ITEMS_KEY = "SELECTED_ITEMS_KEY";
     public static final String SEARCH_TEXT_KEY = "SEARCH_TEXT_KEY";
-    public static final String SEARCH_ITEM_EXPAND_STATUS = "EXPANDED";
+    public static final String SEARCH_ITEM_EXPAND_STATUS = "SEARCH_ITEM_EXPANDED";
     public static final int ADD_ACTIVITY_REQUEST_CODE = 0;
     public static final int LOADER_ID = 1;
     public static final int DETAIL_ACTIVITY_REQUEST_CODE = 2;
@@ -86,12 +90,13 @@ public class MainActivity extends AppCompatActivity implements ContactRecyclerAd
         if (mActionMode != null) {
             mActionMode.finish();
         }
-        if(mSearchItem.isActionViewExpanded()){
+        if (mSearchItem.isActionViewExpanded()) {
             mSearchItem.collapseActionView();
         }
         Intent intent = new Intent(getApplicationContext(), AddContactActivity.class);
         startActivityForResult(intent, ADD_ACTIVITY_REQUEST_CODE);
     }
+
     // This method is called when AddContactActivity or DetailActivity finishes
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -141,6 +146,13 @@ public class MainActivity extends AppCompatActivity implements ContactRecyclerAd
         } else {
             mAdapter.selectItem(position);
         }
+    }
+
+    @Override
+    public void OnCallButtonClick(String number) {
+        Toast.makeText(this, "Contact number: " + number, Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel: " + number));
+        startActivity(intent);
     }
 
     @NonNull
@@ -232,6 +244,7 @@ public class MainActivity extends AppCompatActivity implements ContactRecyclerAd
         mSearchItem = menu.findItem(R.id.search);
         mSearchView = (SearchView) mSearchItem.getActionView();
         mSearchView.setQueryHint(getString(R.string.search_hint));
+        mSearchView.setMaxWidth(Integer.MAX_VALUE);
         if(!TextUtils.isEmpty(mSearchText) || mIsSearchItemExpanded)
         {
              new Handler().post(new Runnable() {

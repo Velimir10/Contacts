@@ -12,14 +12,14 @@ import java.util.List;
 
 public final class DbManager {
 
-    private final String orderBy;
+    private final String mOrderBy;
     private static DbManager instance;
     private SQLiteDatabase mDb;
     private List<LoadListener> mListeners;
 
     private DbManager() {
         mListeners = new ArrayList<>();
-        this.orderBy = ContactTable.COLUMN_NAME + ", " + ContactTable.COLUMN_LAST_NAME + " COLLATE NOCASE ASC";
+        this.mOrderBy = ContactTable.COLUMN_NAME + ", " + ContactTable.COLUMN_LAST_NAME + " COLLATE NOCASE ASC";
     }
 
     public static DbManager getInstance() {
@@ -72,7 +72,7 @@ public final class DbManager {
         setDb(helper);
 
         List<Contact> myContacts = new ArrayList<>();
-        Cursor cursor = mDb.query(ContactTable.TABLE_NAME, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
+        Cursor cursor = mDb.query(ContactTable.TABLE_NAME, columns, selection, selectionArgs, groupBy, having, mOrderBy, limit);
 
         try {
             while (cursor.moveToNext()) {
@@ -82,8 +82,8 @@ public final class DbManager {
                 String address = cursor.getString(cursor.getColumnIndex(ContactTable.COLUMN_ADDRESS));
                 String phoneNumber = cursor.getString(cursor.getColumnIndex(ContactTable.COLUMN_PHONE_NUMBER));
                 String eMailAdress = cursor.getString(cursor.getColumnIndex(ContactTable.COLUMN_EMAIL_ADDRESS));
-
-                Contact contact = new Contact(id, name, lastname, address, phoneNumber, eMailAdress);
+                String avatar = cursor.getString(cursor.getColumnIndex(ContactTable.COLUMN_AVATAR));
+                Contact contact = new Contact(id, name, lastname, address, phoneNumber, eMailAdress, avatar);
                 myContacts.add(contact);
             }
         } catch (Exception e) {

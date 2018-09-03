@@ -33,7 +33,10 @@ dependencies {
     implementation 'com.android.support:design:' + googleSupportLibraryVersion
     implementation 'com.android.support:coordinatorlayout:' +googleSupportLibraryVersion
 
-
+    //picasso
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    //CircleImageView
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
 
 
 

@@ -11,4 +11,6 @@
     <string name="delete">delete</string>
     <string name="search_title">Search</string>
     <string name="search_hint">Search contacts..</string>
+    <string name="call">call</string>
+    <string name="list_text_placeholder">Velimir Atanasovski</string>
 </resources>

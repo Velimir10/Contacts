@@ -2,6 +2,7 @@ package com.example.velimiratanasovski.contacts.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
 public class Contact implements Parcelable {
 
     private int id;
@@ -10,6 +11,7 @@ public class Contact implements Parcelable {
     private String address;
     private String phoneNumber;
     private String eMail;
+    private String avatar;
 
     public Contact(String name, String lastName, String address, String phoneNumber, String eMail) {
         this.name = name;
@@ -19,13 +21,14 @@ public class Contact implements Parcelable {
         this.eMail = eMail;
     }
 
-    public Contact(int id, String name, String lastName, String address, String phoneNumber, String eMail) {
+    public Contact(int id, String name, String lastName, String address, String phoneNumber, String eMail, String avatar) {
         this.id = id;
         this.name = name;
         this.lastName = lastName;
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.eMail = eMail;
+        this.avatar = avatar;
     }
 
     private Contact(Parcel in) {
@@ -35,6 +38,7 @@ public class Contact implements Parcelable {
         address = in.readString();
         phoneNumber = in.readString();
         eMail = in.readString();
+        avatar = in.readString();
     }
 
     public static final Creator<Contact> CREATOR = new Creator<Contact>() {
@@ -77,6 +81,11 @@ public class Contact implements Parcelable {
         return eMail;
     }
 
+    public String getAvatar() {
+        return avatar;
+    }
+
+
     public void setName(String name) {
         this.name = name;
     }
@@ -97,6 +106,11 @@ public class Contact implements Parcelable {
         this.eMail = eMail;
     }
 
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+
     @Override
     public int describeContents() {
         return 0;
@@ -110,5 +124,6 @@ public class Contact implements Parcelable {
         dest.writeString(address);
         dest.writeString(phoneNumber);
         dest.writeString(eMail);
+        dest.writeString(avatar);
     }
 }

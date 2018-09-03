@@ -1,23 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:contentPadding="@dimen/cardContentPadding">
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/contactAvatar"
+        android:layout_width="@dimen/cirle_image_width"
+        android:layout_height="@dimen/circle_image_height"
+        android:layout_marginBottom="@dimen/circle_margin_bottom"
+        android:layout_marginEnd="@dimen/circle_margin_right"
+        android:layout_marginStart="@dimen/circle_margin_left"
+        android:layout_marginTop="@dimen/circle_margin_top"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/name_and_lastName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/name_and_lastName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_margin="@dimen/TextViewMargins"
-                    android:textSize="@dimen/nameSize"
-                    tools:text="Velimir Atanasovski"/>
+    <TextView
+        android:id="@+id/name_and_lastName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/nameSize"
+        android:textColor="@color/colorBlack"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button_call"
+        app:layout_constraintStart_toEndOf="@+id/contactAvatar"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/list_text_placeholder"/>
 
-        </android.support.v7.widget.CardView>
-</FrameLayout>
+    <ImageButton
+        android:id="@+id/button_call"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginBottom="@dimen/button_call_marginBottom"
+        android:layout_marginEnd="@dimen/button_call_marginRight"
+        android:layout_marginTop="@dimen/button_call_marginTop"
+        android:background="@color/colorWhite"
+        android:contentDescription="@string/call"
+        android:src="@drawable/image_call"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/name_and_lastName"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</android.support.constraint.ConstraintLayout>
