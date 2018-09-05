@@ -13,12 +13,13 @@ public class Contact implements Parcelable {
     private String eMail;
     private String avatar;
 
-    public Contact(String name, String lastName, String address, String phoneNumber, String eMail) {
+    public Contact(String name, String lastName, String address, String phoneNumber, String eMail, String avatar) {
         this.name = name;
         this.address = address;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.eMail = eMail;
+        this.avatar = avatar;
     }
 
     public Contact(int id, String name, String lastName, String address, String phoneNumber, String eMail, String avatar) {

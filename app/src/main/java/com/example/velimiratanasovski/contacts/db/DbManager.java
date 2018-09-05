@@ -212,6 +212,7 @@ public final class DbManager {
         values.put(ContactTable.COLUMN_ADDRESS, contact.getAddress());
         values.put(ContactTable.COLUMN_PHONE_NUMBER, contact.getPhoneNumber());
         values.put(ContactTable.COLUMN_EMAIL_ADDRESS, contact.getEmail());
+        values.put(ContactTable.COLUMN_AVATAR, contact.getAvatar());
         return values;
     }
 

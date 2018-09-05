@@ -1,6 +1,7 @@
 package com.example.velimiratanasovski.contacts;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -9,12 +10,16 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.example.velimiratanasovski.contacts.model.Contact;
+import com.squareup.picasso.Picasso;
+import de.hdodenhof.circleimageview.CircleImageView;
+
 import static com.example.velimiratanasovski.contacts.DetailContactActivity.EDIT_CONTACT;
 
 public class AddContactActivity extends AppCompatActivity {
 
     public static final String NEW_CONTACT = "NEW CONTACT";
-    private EditText mName, mLastname, mAddress, mPhoneNumber, mEmailAddress;
+    private EditText mName, mLastName, mAddress, mPhoneNumber, mEmailAddress;
+    private CircleImageView mContactAvatar;
     private Contact mEditContact;
 
     @Override
@@ -24,15 +29,14 @@ public class AddContactActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         mName = findViewById(R.id.editText_name);
-        mLastname = findViewById(R.id.editText_lastname);
+        mLastName = findViewById(R.id.editText_lastname);
         mAddress = findViewById(R.id.editText_address);
         mPhoneNumber = findViewById(R.id.editText_number);
         mEmailAddress = findViewById(R.id.editText_eMail);
+        mContactAvatar = findViewById(R.id.contactAvatar);
 
         setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+
         try {
             mEditContact = getIntent().getExtras().getParcelable(EDIT_CONTACT);
             if (mEditContact != null) {
@@ -54,10 +58,13 @@ public class AddContactActivity extends AppCompatActivity {
         if (mEditContact != null) {
             mEditContact.setId(mEditContact.getId());
             mEditContact.setName(mName.getText().toString());
-            mEditContact.setLastName(mLastname.getText().toString());
+            mEditContact.setLastName(mLastName.getText().toString());
             mEditContact.setAddress(mAddress.getText().toString());
             mEditContact.setPhoneNumber(mPhoneNumber.getText().toString());
             mEditContact.seteMail(mEmailAddress.getText().toString());
+            if (mEditContact.getAvatar() != null) {
+                Picasso.get().load(mEditContact.getAvatar()).into(mContactAvatar);
+            }
 
         } else {
             mEditContact = getContact();
@@ -67,25 +74,26 @@ public class AddContactActivity extends AppCompatActivity {
         finish();
     }
 
-    private Contact getContact() {
-        return new Contact(mName.getText().toString(),
-                mLastname.getText().toString(),
-                mAddress.getText().toString(),
-                mPhoneNumber.getText().toString(),
-                mEmailAddress.getText().toString());
+    public void onCancelButtonClick(View view){
+        finish();
     }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
+    private Contact getContact() {
+        return new Contact(mName.getText().toString(),
+                mLastName.getText().toString(),
+                mAddress.getText().toString(),
+                mPhoneNumber.getText().toString(),
+                mEmailAddress.getText().toString(),null);
     }
 
     public void setContactValues() {
         mName.setText(mEditContact.getName());
-        mLastname.setText(mEditContact.getLastName());
+        mLastName.setText(mEditContact.getLastName());
         mPhoneNumber.setText(mEditContact.getPhoneNumber());
         mAddress.setText(mEditContact.getAddress());
         mEmailAddress.setText(mEditContact.getEmail());
+        if(mEditContact.getAvatar() != null) {
+            Picasso.get().load(Uri.parse(mEditContact.getAvatar())).into(mContactAvatar);
+        }
     }
 }

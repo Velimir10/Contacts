@@ -1,8 +1,6 @@
 package com.example.velimiratanasovski.contacts;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -19,7 +17,6 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 import com.example.velimiratanasovski.contacts.adapters.ContactRecyclerAdapter;
 import com.example.velimiratanasovski.contacts.db.DatabaseContract.ContactTable;
 import com.example.velimiratanasovski.contacts.db.DatabaseLoader;
@@ -81,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements ContactRecyclerAd
             List<Integer> selectedItems = savedInstanceState.getIntegerArrayList(SELECTED_ITEMS_KEY);
             mActionMode = startSupportActionMode(actionModeCallbacks);
             mAdapter.setSelectedItems(selectedItems);
+            setActionModeTitle();
         }
         mSearchText = savedInstanceState.getString(SEARCH_TEXT_KEY);
         mIsSearchItemExpanded = savedInstanceState.getBoolean(SEARCH_ITEM_EXPAND_STATUS);
@@ -135,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements ContactRecyclerAd
             startActivityForResult(intent, DETAIL_ACTIVITY_REQUEST_CODE);
         } else {
             mAdapter.selectItem(mAdapter.getItemPosition(contact));
+            setActionModeTitle();
         }
     }
 
@@ -143,14 +142,24 @@ public class MainActivity extends AppCompatActivity implements ContactRecyclerAd
         if (mActionMode == null) {
             mActionMode = startSupportActionMode(actionModeCallbacks);
             mAdapter.selectItem(position);
+            setActionModeTitle();
         } else {
             mAdapter.selectItem(position);
+            setActionModeTitle();
+        }
+    }
+
+    private void setActionModeTitle(){
+        int selectedItems = mAdapter.getSelectedItems().size();
+        if(selectedItems == 1){
+            mActionMode.setTitle(selectedItems + " " + getString(R.string.action_mode_selected_item));
+        } else {
+            mActionMode.setTitle(selectedItems + " " + getString(R.string.action_mode_selected_items));
         }
     }
 
     @Override
     public void OnCallButtonClick(String number) {
-        Toast.makeText(this, "Contact number: " + number, Toast.LENGTH_LONG).show();
         Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel: " + number));
         startActivity(intent);
     }

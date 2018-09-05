@@ -1,14 +1,19 @@
 package com.example.velimiratanasovski.contacts;
 
 import android.content.Intent;
+import android.net.Uri;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.velimiratanasovski.contacts.model.Contact;
+import com.squareup.picasso.Picasso;
 
 public class DetailContactActivity extends AppCompatActivity {
 
@@ -21,11 +26,14 @@ public class DetailContactActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_contact);
 
-        Toolbar mToolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        CollapsingToolbarLayout collapsingToolbar = findViewById(R.id.toolbar_layout);
+        ImageView contactAvatar = findViewById(R.id.expandedImage);
+
+        setSupportActionBar(toolbar);
+
         if(getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
         try {
@@ -37,8 +45,6 @@ public class DetailContactActivity extends AppCompatActivity {
             return;
         }
 
-        final TextView name = findViewById(R.id.textView_name);
-        final TextView lastName = findViewById(R.id.textView_last_name);
         final TextView address = findViewById(R.id.textView_address);
         final TextView phone = findViewById(R.id.textView_phone);
         final TextView eMail = findViewById(R.id.textView_eMail);
@@ -47,8 +53,12 @@ public class DetailContactActivity extends AppCompatActivity {
             finish();
             return;
         }
-        name.setText(mContact.getName());
-        lastName.setText(mContact.getLastName());
+
+        collapsingToolbar.setTitle(mContact.getName() + " " + mContact.getLastName());
+
+        if(mContact.getAvatar() != null){
+            Picasso.get().load(mContact.getAvatar()).into(contactAvatar);
+        }
         address.setText(mContact.getAddress());
         phone.setText(mContact.getPhoneNumber());
         eMail.setText(mContact.getEmail());
@@ -81,5 +91,10 @@ public class DetailContactActivity extends AppCompatActivity {
                 default:
                     return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void onButtonCallClick(View view){
+        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel: " + mContact.getPhoneNumber()));
+        startActivity(intent);
     }
 }

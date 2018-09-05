@@ -34,8 +34,8 @@ public final class DbHelper extends SQLiteOpenHelper {
     }
 
     private void addInitialContacts(){
-        initialContacts.add(new Contact("Stefan", "Stefanovic", "Miroslava Ilica 15", "0652288456", "sstefan@hotmail.com"));
-        initialContacts.add(new Contact("Marko", "Markovic", "Djordja Jovanovic 7a", "0652282281", "markommm@hotmail.com"));
-        initialContacts.add(new Contact("Dusan", "Petrovic", "Hajduk Veljkova 118", "0634445451", "dule11@hotmail.com"));
+        initialContacts.add(new Contact("Stefan", "Stefanovic", "Miroslava Ilica 15", "0652288456", "sstefan@hotmail.com", "https://i.kinja-img.com/gawker-media/image/upload/s--PUQWGzrn--/c_scale,f_auto,fl_progressive,q_80,w_800/yktaqmkm7ninzswgkirs.jpg"));
+        initialContacts.add(new Contact("Marko", "Markovic", "Djordja Jovanovic 7a", "0652282281", "markommm@hotmail.com","https://i.kinja-img.com/gawker-media/image/upload/s--PUQWGzrn--/c_scale,f_auto,fl_progressive,q_80,w_800/yktaqmkm7ninzswgkirs.jpg"));
+        initialContacts.add(new Contact("Dusan", "Petrovic", "Hajduk Veljkova 118", "0634445451", "dule11@hotmail.com","https://static.hltv.org/images/galleries/converted/3703-thumbretina/1309108427.29.jpeg"));
     }
 }

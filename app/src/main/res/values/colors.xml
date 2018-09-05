@@ -7,4 +7,6 @@
     <color name="colorGreen">#4DD229</color>
     <color name="colorBlack">#000000</color>
     <color name="colorLightGray">#FFCCCCCC</color>
+    <color name="gradient_start_color">#FD8607</color>
+    <color name="gradient_end_color">#FFA442</color>
 </resources>

@@ -1,52 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DetailContactActivity"
-    android:orientation="vertical">
+    android:background="@color/colorWhite"
+    tools:context=".DetailContactActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme"
-            />
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
+            app:collapsedTitleTextAppearance="@style/CollapsingTextStyle"
+            app:contentScrim="?attr/colorPrimary"
+            app:expandedTitleMarginBottom="@dimen/expanded_title_marginBottom"
+            app:expandedTitleMarginStart="@dimen/expanded_title_marginStart"
+            app:expandedTitleTextAppearance="@style/CollapsingTextStyle"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <ImageView
+                android:id="@+id/expandedImage"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/expanded_image_height"
+                android:contentDescription="@string/contact_avatar_description"
+                android:scaleType="centerCrop"
+                android:src="@drawable/gradient_shape"
+                app:layout_collapseMode="parallax" />
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin" />
+
+        </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <TextView
-        android:id="@+id/textView_name"
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/previewTextStyle"/>
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <TextView
-        android:id="@+id/textView_last_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/previewTextStyle"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/detail_activity_marginStart"
+            android:layout_marginTop="@dimen/detail_activity_marginStart"
+            android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textView_phone"
-        style="@style/previewTextStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/textView_address"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/previewTextStyle"/>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textView_eMail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/previewTextStyle"/>
-</LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/enter_phone_number"
+                        android:textSize="@dimen/textSize" />
+
+                    <TextView
+                        android:id="@+id/textView_phone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/textSize"
+                        tools:text="+38163233802" />
+
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/button_call"
+                    android:layout_width="@dimen/button_call_width"
+                    android:layout_height="@dimen/button_call_height"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="@dimen/call_button_marginEnd"
+                    android:background="@color/colorWhite"
+                    android:contentDescription="@string/call"
+                    android:onClick="onButtonCallClick"
+                    android:src="@drawable/image_call" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/detail_activity_marginStart"
+                android:text="@string/enter_address"
+                android:textSize="@dimen/textSize" />
+
+            <TextView
+                android:id="@+id/textView_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/textSize" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/detail_activity_marginStart"
+                android:text="@string/enter_email_address"
+                android:textSize="@dimen/textSize" />
+
+            <TextView
+                android:id="@+id/textView_eMail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/textSize" />
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+</android.support.design.widget.CoordinatorLayout>

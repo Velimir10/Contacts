@@ -1,16 +1,20 @@
 <resources>
     <string name="app_name">Contacts</string>
-    <string name="enter_phone_number">Enter phone number..</string>
-    <string name="enter_address">Enter address..</string>
-    <string name="enter_lastname">Enter last name..</string>
-    <string name="enter_name">Enter name..</string>
+    <string name="enter_phone_number">Phone Number</string>
+    <string name="enter_address">Address</string>
+    <string name="enter_lastname">Surname</string>
+    <string name="enter_name">First Name</string>
+    <string name="enter_email_address">Email</string>
     <string name="save">Save</string>
     <string name="toast_add_contact">Please, enter name and phone number!</string>
     <string name="edit">Edit</string>
-    <string name="enter_email_address">Enter Email address…</string>
     <string name="delete">delete</string>
     <string name="search_title">Search</string>
     <string name="search_hint">Search contacts..</string>
     <string name="call">call</string>
     <string name="list_text_placeholder">Velimir Atanasovski</string>
+    <string name="action_mode_selected_item">selected item</string>
+    <string name="action_mode_selected_items">selected items</string>
+    <string name="cancel">Cancel</string>
+    <string name="contact_avatar_description">Contact avatar</string>
 </resources>
